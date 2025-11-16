@@ -464,7 +464,30 @@ chain = prompt | llm | output_parser
 ---
 
 
+## 📚 Project Documentation
+
+For deeper understanding of the concepts and techniques used in this project, check out these comprehensive guides:
+
+- **[Basics_Readme.md](./Basics_Readme.md)**: Complete guide to AI agent fundamentals
+  - Evolution from traditional code to autonomous agents
+  - Human-driven vs. agent-executed approaches
+  - Detailed explanations of LLMs, Chains, Routers, State Machines, and Agents
+  - When to use each approach with practical examples
+  - Comparison matrices and decision frameworks
+
+- **[Langgraph.md](./Langgraph.md)**: Complete guide to LangGraph
+  - Core concepts: State, Nodes, Edges, and Graphs
+  - Key components and architecture
+  - Important features: Visualization, Streaming, Persistence, Human-in-the-Loop
+  - Common patterns and best practices
+  - Advanced topics and real-world examples
+  - Step-by-step getting started guide
+
+---
+
 ## 📖 Further Reading
+
+### External Resources
 
 - [LangChain Documentation](https://python.langchain.com/)
 - [LangGraph Documentation](https://langchain-ai.github.io/langgraph/)
