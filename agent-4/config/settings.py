@@ -10,6 +10,13 @@ LLM_MODEL = "llama3.1:8b"
 # stockprices.dev base URL (no API key needed)
 STOCK_API_BASE = "https://stockprices.dev/api"
 
+LLM_TEMPERATURE  = 0 
+
+
+DAGSHUB_REPO_OWNER = "264Gaurav"
+DAGSHUB_REPO_NAME  = "agentic-ai"
+MLFLOW_EXPERIMENT  = "stock-agent"
+
 # Request timeout (seconds)
 REQUEST_TIMEOUT = 5
 

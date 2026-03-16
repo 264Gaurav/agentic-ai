@@ -6,11 +6,10 @@
 #   • Stock news, analyst opinions, company context
 #   • "Should I buy?" type queries
 # ─────────────────────────────────────────────────────────────
-
-from langchain_community.tools.tavily_search import TavilySearchResults
+from langchain_tavily import TavilySearch
 from config.settings import TAVILY_MAX_RESULTS
 
-tavily_tool = TavilySearchResults(
+tavily_tool = TavilySearch(
     max_results=TAVILY_MAX_RESULTS,
     name="tavily_search",
     description=(

@@ -61,7 +61,8 @@ TAVILY_API_KEY=your_tavily_api_key
 ## Run
 
 ```bash
-python main.py
+python main.py        # chat runs tracked remotely
+python main.py --eval # evaluation suite tracked remotely
 ```
 
 ## Adding a New Tool
