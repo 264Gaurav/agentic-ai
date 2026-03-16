@@ -18,3 +18,9 @@ tqdm
 datasets
 langchain-tavily
 langgraph
+
+yfinance
+requests
+tavily-python
+python-dotenv
+typing_extensions
