@@ -57,7 +57,7 @@ print(app.get_graph().draw_mermaid())
 
 # Invoke with proper state format
 response = app.invoke({
-    "messages": [HumanMessage(content="Write about how small business can leverage AI to grow")]
+    "messages": [HumanMessage(content="What are the current news on USA and Iran war for this week?")]
 })
 
 # Extract and print the final answer
