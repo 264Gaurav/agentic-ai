@@ -1,10 +1,15 @@
 from langchain.prompts import ChatPromptTemplate, MessagesPlaceholder
 import datetime
 from dotenv import load_dotenv
-from langchain_google_genai import ChatGoogleGenerativeAI
 from schema import AnswerQuestion, ReviseAnswer
 from langchain_core.output_parsers.openai_tools import PydanticToolsParser, JsonOutputToolsParser
 from langchain_core.messages import HumanMessage
+
+import sys
+from pathlib import Path
+# Add parent directory to Python path to import llms module
+sys.path.insert(0, str(Path(__file__).parent.parent))
+from llms import default_gemini_llm
 
 load_dotenv()
 pydantic_parser = PydanticToolsParser(tools=[AnswerQuestion])
@@ -35,7 +40,10 @@ first_responder_prompt_template = actor_prompt_template.partial(
     first_instruction="Provide a detailed ~250 word answer"
 )
 
-llm = ChatGoogleGenerativeAI(model="gemini-2.5-flash")
+#----------------------------------------------LLM Section----------------------------------------------
+# Use the default Gemini LLM with per-call MLflow tracing (see llms/gemini.py)
+llm = default_gemini_llm
+#----------------------------------------------LLM Section----------------------------------------------
 
 first_responder_chain = first_responder_prompt_template | llm.bind_tools(tools=[AnswerQuestion], tool_choice='AnswerQuestion') 
 

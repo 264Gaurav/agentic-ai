@@ -1,4 +1,10 @@
+import dagshub
+import mlflow
+
+dagshub.init(repo_owner='264Gaurav', repo_name='agentic-ai', mlflow=True)
+mlflow.set_experiment("agent-3")
 from typing import List, TypedDict
+
 
 from langchain_core.messages import BaseMessage, ToolMessage, HumanMessage
 from langgraph.graph import END, START, StateGraph
@@ -56,21 +62,34 @@ app = graph.compile()
 print(app.get_graph().draw_mermaid())
 
 # Invoke with proper state format
-response = app.invoke({
-    "messages": [HumanMessage(content="What are the current news on USA and Iran war for this week?")]
-})
+question = "What are the current news on USA and Iran war for this week?"
 
-# Extract and print the final answer
-final_messages = response["messages"]
-# Find the last message with tool calls (should be the final answer)
-for msg in reversed(final_messages):
-    if hasattr(msg, "tool_calls") and msg.tool_calls:
-        tool_call = msg.tool_calls[0]
-        if "args" in tool_call and "answer" in tool_call["args"]:
-            print("\n=== Final Answer ===")
-            print(tool_call["args"]["answer"])
-            if "references" in tool_call["args"]:
-                print("\n=== References ===")
-                for ref in tool_call["args"]["references"]:
-                    print(f"- {ref}")
-            break
+with mlflow.start_run(run_name="news_qa"):
+    mlflow.log_param("question", question)
+    mlflow.log_param("max_iterations", MAX_ITERATIONS)
+
+    response = app.invoke({
+        "messages": [HumanMessage(content=question)]
+    })
+
+    final_messages = response["messages"]
+    num_messages = len(final_messages)
+    num_tool_messages = sum(isinstance(m, ToolMessage) for m in final_messages)
+
+    mlflow.log_metric("num_messages", num_messages)
+    mlflow.log_metric("num_tool_messages", num_tool_messages)
+
+    # existing printing logic...
+    for msg in reversed(final_messages):
+        if hasattr(msg, "tool_calls") and msg.tool_calls:
+            tool_call = msg.tool_calls[0]
+            if "args" in tool_call and "answer" in tool_call["args"]:
+                answer = tool_call["args"]["answer"]
+                mlflow.log_param("answer_preview", answer)
+                print("\n=== Final Answer ===")
+                print(answer)
+                if "references" in tool_call["args"]:
+                    print("\n=== References ===")
+                    for ref in tool_call["args"]["references"]:
+                        print(f"- {ref}")
+                break

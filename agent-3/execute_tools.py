@@ -1,10 +1,27 @@
 import json
+import time
 from typing import List, Dict, Any
 from langchain_core.messages import AIMessage, BaseMessage, ToolMessage, HumanMessage
 from langchain_community.tools import TavilySearchResults
+import mlflow
 
 # Create the Tavily search tool
 tavily_tool = TavilySearchResults(max_results=5)
+
+
+def traced_tool_call(tool, name: str, *args, **kwargs):
+    """
+    Small helper to log per-call latency and basic metadata for tools.
+    """
+    start = time.time()
+    result = tool.invoke(*args, **kwargs)
+    duration = time.time() - start
+
+    mlflow.log_metric(f"{name}_latency_s", duration)
+    mlflow.log_param(f"{name}_max_results", getattr(tool, "max_results", None))
+
+    return result
+
 
 # Function to execute search queries from AnswerQuestion tool calls
 def execute_tools(state: List[BaseMessage]) -> List[BaseMessage]:
@@ -25,7 +42,7 @@ def execute_tools(state: List[BaseMessage]) -> List[BaseMessage]:
             # Execute each search query using the tavily tool
             query_results = {}
             for query in search_queries:
-                result = tavily_tool.invoke(query)
+                result = traced_tool_call(tavily_tool, "tavily_search", query)
                 query_results[query] = result
             
             # Create a tool message with the results
